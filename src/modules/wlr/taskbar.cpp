@@ -15,6 +15,7 @@
 #include <sstream>
 #include <utility>
 
+#include "AModule.hpp"
 #include "gdkmm/general.h"
 #include "glibmm/error.h"
 #include "glibmm/fileutils.h"
@@ -386,7 +387,13 @@ bool Task::handle_clicked(GdkEventButton *bt) {
 
   if (action.empty())
     return true;
-  else if (action == "activate")
+
+  if (config_["before-action"].isString()) {
+    auto cmd = config_["before-action"].asString();
+    system(cmd.c_str());
+  }
+
+  if (action == "activate")
     activate();
   else if (action == "minimize") {
     set_minimize_hint();
@@ -407,6 +414,11 @@ bool Task::handle_clicked(GdkEventButton *bt) {
     close();
   else
     spdlog::warn("Unknown action {}", action);
+
+  if (config_["after-action"].isString()) {
+    auto cmd = config_["after-action"].asString().append(" &");
+    system(cmd.c_str());
+  }
 
   drag_start_button = -1;
   return true;
