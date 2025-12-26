@@ -15,7 +15,6 @@
 #include <sstream>
 #include <utility>
 
-#include "AModule.hpp"
 #include "gdkmm/general.h"
 #include "glibmm/error.h"
 #include "glibmm/fileutils.h"
